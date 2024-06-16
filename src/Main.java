@@ -1,7 +1,12 @@
 import caeser.CaesarCipher;
+import caeser.CryptoAlphabet;
 
 import java.io.*;
 import java.util.Scanner;
+
+
+
+import static java.awt.SystemColor.text;
 
 
 public class Main {
@@ -24,13 +29,25 @@ public class Main {
         String filePath = scanner.nextLine();  //read path
 
         int key;
-
+        String text = null;
+        try {
+            text = FileService.readFile(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        boolean isUkr = CryptoAlphabet.isUkrainianString(text);
+        String alphabet =  CryptoAlphabet.englishAlphabet;
+        if (isUkr) {
+            System.out.println("is Ukrainian alphabet");
+            alphabet = CryptoAlphabet.ukrainianAlphabet;
+        } else {
+            System.out.println(" is English alphabet");
+        }
         if (opNumber == 1) {
             System.out.println("Enter the key value for Caesercrypt: "); // get a key from user (0-35) of dont know nummer
             key = scanner.nextInt();
             try {
-                String text = FileService.readFile(filePath);
-                String encodedText = CaesarCipher.encode(text, key);
+                String encodedText = CaesarCipher.encode(text, key,alphabet);
                 System.out.println(encodedText);
                 String newPathFile = filePath + CaesarCipher.ENCRYPTED;
                 FileService.createFile(newPathFile);
@@ -44,8 +61,7 @@ public class Main {
             System.out.println("Enter the key value for Caesercrypt: "); // get a key from user (0-35) of dont know nummer
             key = scanner.nextInt();
             try {
-                String text = FileService.readFile(filePath);
-                String decodedText = CaesarCipher.decode(text, key);
+                String decodedText = CaesarCipher.decode(text, key, alphabet);
                 System.out.println(decodedText);
                 String newPathFile = filePath + CaesarCipher.DECRYPTED;
                 FileService.createFile(newPathFile);
@@ -57,8 +73,7 @@ public class Main {
             }
         } if (3 == opNumber) {
             try {
-                String text = FileService.readFile(filePath);
-                String bruteForcetext = CaesarCipher.bruteForce(text);
+                String bruteForcetext = CaesarCipher.bruteForce(text,alphabet);
                 System.out.println(bruteForcetext);
                 String newPathFile = filePath + CaesarCipher.BRUTE_FORCED;
                 FileService.createFile(newPathFile);
@@ -69,5 +84,7 @@ public class Main {
                 System.out.println(e.getMessage());
             }
         }
+
+
     }
 }

@@ -1,4 +1,9 @@
+import caeser.CryptoAlphabet;
+
 import java.io.*;
+
+//import static caeser.CryptoAlphabet.alphabet;
+//import static caeser.CryptoAlphabet.ukrainian;
 
 public class FileService {
 
@@ -22,4 +27,6 @@ public class FileService {
         }
         return contentBuilder.toString().trim();
     }
+
 }
+
